@@ -114,7 +114,7 @@ def test_generate_min_requirements(
     requirements_koalas = "\n".join([ploty_dep, numpy_lower])
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", prefix="out_requirements"
-    ) as out_f:
+    ) as _:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".txt", prefix="core_requirements"
         ) as core_f:
