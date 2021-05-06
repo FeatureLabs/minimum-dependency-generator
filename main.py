@@ -9,7 +9,7 @@ def main():
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
     # DO NOT remove, the GH action needs to output
-    print(requirements)
+    print(f"::set-output name=min_reqs::{requirements}")
     return
 
 if __name__ == '__main__':
