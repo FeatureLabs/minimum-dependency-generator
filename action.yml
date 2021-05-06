@@ -11,4 +11,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.requirements_paths }}
+    - --requirements_paths ${{ inputs.requirements_paths }}
