@@ -8,6 +8,8 @@ def main():
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
+    # DO NOT remove, the GH action needs to output
+    print(requirements)
     return
 
 if __name__ == '__main__':
