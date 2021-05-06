@@ -1,0 +1,25 @@
+name: Integration Tests
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+jobs:
+  unit_tests:
+    name: test github action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+      - name: Set up python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Run Minimum Dependency Generator GitHub Action
+        uses: ./
+        with:
+          requirements_paths: 'test-requirements.txt requirements.txt'
