@@ -1,4 +1,4 @@
-name: Integration Tests
+name: Integration Test
 on:
   pull_request:
     types: [opened, synchronize]
@@ -6,7 +6,7 @@ on:
     branches:
       - main
 jobs:
-  unit_tests:
+  integration_test:
     name: integration test
     runs-on: ubuntu-latest
     steps:
@@ -20,9 +20,9 @@ jobs:
         with:
           python-version: 3.7
       - name: Run Minimum Dependency Generator GitHub Action
-        uses: ./
         id: min_dep_gen
+        uses: ./
         with:
           requirements_paths: 'test-requirements.txt requirements.txt'
       - name: Get the output time
-        run: echo "The time was ${{ steps.min_dep_gen.outputs.min_reqs }}"
+        run: echo "The time was ${{ steps.integration_test.min_dep_gen.outputs.min_reqs }}"
