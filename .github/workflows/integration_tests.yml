@@ -26,10 +26,16 @@ jobs:
           requirements_paths: 'test-requirements.txt requirements.txt'
       - name: Save the output minimum requirements
         run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
-      - name: Compare the two files
+      - name: Verify output
         run: |
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "packaging==20.9"
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "isort==5.8.0"
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest-cov==2.11.1"
+      - name: Run Minimum Dependency Generator GitHub Action
+        id: min_dep_gen
+        uses: ./
+        with:
+          requirements_paths: 'requirements.txt'
           echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pip==20.2.2"
           echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
-          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest-cov==2.11.1"
-          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "isort==5.8.0"
-          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "packaging==20.9"
