@@ -25,6 +25,6 @@ jobs:
         with:
           requirements_paths: 'test-requirements.txt requirements.txt'
       - name: Save the output minimum requirements
-        run: echo ${{ steps.min_dep_gen.outputs.min_reqs }} >> 'generated-min-reqs.txt'
+        run: echo "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
       - name: Compare the two files
         run: make compare_files FILE_1=generated-min-reqs.txt FILE_2=correct-min-requirements.txt
