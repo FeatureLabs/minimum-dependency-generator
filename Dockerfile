@@ -1,7 +1,8 @@
 FROM python:3.7
 
-ADD ci ci
+ADD minimum_dependency_generator minimum_dependency_generator
 ADD requirements.txt requirements.txt
+ADD test-requirements.txt test-requirements.txt
 ADD main.py main.py
 
 RUN pip install pip --upgrade --progress-bar off
