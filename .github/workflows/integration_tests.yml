@@ -21,5 +21,8 @@ jobs:
           python-version: 3.7
       - name: Run Minimum Dependency Generator GitHub Action
         uses: ./
+        id: min_dep_gen
         with:
           requirements_paths: 'test-requirements.txt requirements.txt'
+      - name: Get the output time
+        run: echo "The time was ${{ steps.min_dep_gen.outputs.min_reqs }}"
