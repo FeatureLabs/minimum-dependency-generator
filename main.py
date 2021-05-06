@@ -9,7 +9,6 @@ def main():
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
-    requirements = s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
     print(requirements)
     requirements = sanitize_string(requirements)
     print(requirements)
