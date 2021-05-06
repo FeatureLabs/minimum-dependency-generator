@@ -27,4 +27,4 @@ jobs:
       - name: Save the output minimum requirements
         run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
       - name: Compare the two files
-        run: sh compoare.sh
+        run: sh compare.sh
