@@ -73,8 +73,8 @@ def generate_min_requirements(requirements_paths):
 
     print(requirements_paths)
 
-    if isinstance(requirements_paths, str):
-        requirements_paths = requirements_paths.split(' ')
+    if isinstance(requirements_paths, list) and ' ' in requirements_paths[0]:
+        requirements_paths = requirements_paths[0].split(' ')
     print(requirements_paths)
 
     for path in requirements_paths:
