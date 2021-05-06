@@ -22,3 +22,15 @@ test: lint
 .PHONY: testcoverage
 testcoverage: lint
 	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator  --cov-config=../.coveragerc --cache-clear --show-capture=stderr
+
+.PHONY: compare_files
+compare_files:
+	file_1=$(FILE_1)
+	file_2=$(FILE_2)
+	if cmp -s "$file1" "$file2"; then
+	    printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
+	    exit 0
+	else
+	    printf 'The file "%s" is different from "%s"\n' "$file1" "$file2"
+	    exit 1
+	fi

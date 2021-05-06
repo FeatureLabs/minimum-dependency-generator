@@ -9,11 +9,8 @@ def main():
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
-    print(requirements)
     requirements = sanitize_string(requirements)
-    print(requirements)
     # DO NOT remove, the GH action needs to output
-    os.environ['MIN_REQS'] = requirements
     print("::set-output name=min_reqs::{}".format(requirements))
     return
 
