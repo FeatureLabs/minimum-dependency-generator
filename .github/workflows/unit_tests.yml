@@ -6,8 +6,8 @@ on:
     branches:
       - main
 jobs:
-  minimum_dependeny_checker_unit_tests:
-    name: unit tests - minimum dependency checker
+  unit_tests:
+    name: unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
