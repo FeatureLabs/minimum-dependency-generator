@@ -67,12 +67,15 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
     return min_requirement
 
 
-def generate_min_requirements(requirements_paths, py_env_specifier="3.7"):
+def generate_min_requirements(requirements_paths):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
+    print(requirements_paths)
+
     if isinstance(requirements_paths, str):
         requirements_paths = requirements_paths.split(' ')
+    print(requirements_paths)
 
     for path in requirements_paths:
         requirements = []
