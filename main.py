@@ -14,7 +14,7 @@ def main():
     print(requirements)
     # DO NOT remove, the GH action needs to output
     os.environ['MIN_REQS'] = requirements
-    print("::set-output name=content::{}".format(os.environ.get('MIN_REQS')))
+    print("::set-output name=content::{}".format(requirements))
     return
 
 def sanitize_string(s):
