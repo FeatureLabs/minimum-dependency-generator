@@ -1,0 +1,14 @@
+name: 'Minimum Dependency Generator'
+description: 'Generate minimum dependencies with given X requirement text files.'
+inputs:
+  requirements_paths:
+    description: 'path to requirements text files'
+    required: true
+outputs:
+  minimized_requirements: # id of output
+    description: 'String that contains the minimized requirements (separated by \n)'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.requirements_paths }}
