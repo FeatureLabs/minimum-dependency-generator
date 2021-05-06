@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import os
 
 from minimum_dependency_generator import generate_min_requirements
 
@@ -8,9 +9,17 @@ def main():
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
+    requirements = s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+    print(requirements)
+    requirements = sanitize_string(requirements)
+    print(requirements)
     # DO NOT remove, the GH action needs to output
-    print(f"::set-output name=min_reqs::{requirements}")
+    os.environ['MIN_REQS'] = requirements
+    print("::set-output name=content::{}".format(os.environ.get('MIN_REQS')))
     return
+
+def sanitize_string(s):
+    return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
 
 if __name__ == '__main__':
     main()
