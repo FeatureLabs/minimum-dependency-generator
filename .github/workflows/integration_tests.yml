@@ -25,4 +25,6 @@ jobs:
         with:
           requirements_paths: 'test-requirements.txt requirements.txt'
       - name: Get the output time
-        run: echo "The time was ${{ steps.min_dep_gen.outputs.value }}"
+        run: echo "The time was ${{ steps.min_dep_gen.outputs }}"
+      - name: Get the output time
+        run: echo "The time was ${{ steps.min_dep_gen.outputs.min_reqs }}"
