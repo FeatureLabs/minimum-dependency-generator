@@ -19,12 +19,24 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Run Minimum Dependency Generator GitHub Action
+      - name: Run Minimum Dependency Generator with 1 file
+        id: min_dep_gen
+        uses: ./
+        with:
+          requirements_paths: 'requirements.txt'
+      - name: Save the output minimum test requirements
+        run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min--test-reqs.txt
+      - name: Verify output
+        run: |
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "packaging==20.9"
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "requests==2.25.1"
+          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
+      - name: Run Minimum Dependency Generator with 2 files
         id: min_dep_gen
         uses: ./
         with:
           requirements_paths: 'test-requirements.txt requirements.txt'
-      - name: Save the output minimum requirements
+      - name: Save the output minimum test and core requirements
         run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
       - name: Verify output
         run: |
@@ -32,10 +44,3 @@ jobs:
           echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
           echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "isort==5.8.0"
           echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest-cov==2.11.1"
-      - name: Run Minimum Dependency Generator GitHub Action
-        id: min_dep_gen
-        uses: ./
-        with:
-          requirements_paths: 'requirements.txt'
-          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pip==20.2.2"
-          echo "${{ steps.min_dep_gen.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
