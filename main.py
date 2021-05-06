@@ -8,7 +8,6 @@ def main():
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
     requirements = generate_min_requirements(args.requirements_paths)
-    print(requirements)
     return
 
 if __name__ == '__main__':

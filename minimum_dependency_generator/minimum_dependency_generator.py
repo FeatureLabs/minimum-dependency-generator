@@ -71,11 +71,8 @@ def generate_min_requirements(requirements_paths):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
-    print(requirements_paths)
-
     if isinstance(requirements_paths, list) and ' ' in requirements_paths[0]:
         requirements_paths = requirements_paths[0].split(' ')
-    print(requirements_paths)
 
     for path in requirements_paths:
         requirements = []
