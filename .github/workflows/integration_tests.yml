@@ -7,7 +7,7 @@ on:
       - main
 jobs:
   unit_tests:
-    name: test github action
+    name: integration test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

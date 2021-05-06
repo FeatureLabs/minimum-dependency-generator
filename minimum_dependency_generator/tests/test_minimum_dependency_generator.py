@@ -125,8 +125,10 @@ def test_generate_min_requirements(
                 core_f.flush()
                 koalas_f.writelines(requirements_koalas)
                 koalas_f.flush()
+                paths = [core_f.name, koalas_f.name]
+                paths = ' '.join(paths)
                 min_requirements = generate_min_requirements(
-                    requirements_paths=[core_f.name, koalas_f.name]
+                    requirements_paths=paths
                 )
     min_requirements = min_requirements.split('\n')
     expected_min_reqs = [

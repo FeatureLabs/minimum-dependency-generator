@@ -71,6 +71,9 @@ def generate_min_requirements(requirements_paths, py_env_specifier="3.7"):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
+    if isinstance(requirements_paths, str):
+        requirements_paths = requirements_paths.split(' ')
+
     for path in requirements_paths:
         requirements = []
         with open(path) as f:
