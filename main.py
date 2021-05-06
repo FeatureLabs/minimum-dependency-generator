@@ -8,4 +8,5 @@ if __name__ == "__main__":
     parser.add_argument('--requirements_paths', nargs='+',
                         help='path for requirements to minimize', required=True)
     args = parser.parse_args()
-    return generate_min_requirements(args.requirements_paths)
+    requirements = generate_min_requirements(args.requirements_paths)
+    print(requirements)
