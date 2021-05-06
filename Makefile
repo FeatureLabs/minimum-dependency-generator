@@ -17,8 +17,8 @@ lint-fix:
 
 .PHONY: test
 test: lint
-	pytest minimum_dependency_generator/
+	pytest minimum_dependency_generator/ --cache-clear --show-capture=stderr
 
 .PHONY: testcoverage
 testcoverage: lint
-	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator
+	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator --cache-clear --show-capture=stderr
