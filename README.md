@@ -25,7 +25,7 @@ steps.<step id>.outputs.min_reqs
 
 ## Example
 
-This workflow uses the task to generate minimum dependencies.
+This workflow uses the task to generate minimum dependencies, save the output to a text file, and then will generated an Automated MR if there is a change in the minimum dependencies. 
 
 ```yaml
 # minimum_dependency_checker.yml
