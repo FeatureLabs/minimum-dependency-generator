@@ -12,7 +12,7 @@ def main():
     requirements = sanitize_string(requirements)
     # DO NOT remove, the GH action needs to output
     print("::set-output name=min_reqs::{}".format(requirements))
-    return
+
 
 def sanitize_string(s):
     return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
