@@ -44,4 +44,3 @@ jobs:
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "isort==5.8.0"
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "pytest-cov==2.11.1"
-          echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "pandas==1.2.0"
