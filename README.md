@@ -1,10 +1,23 @@
 # GitHub Action - Minimum Dependency Generator
 
-A GitHub Action to generate minimum Python dependencies. 
+<p align="center">
+    <a href="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml" target="_blank">
+        <img src="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml/badge.svg" alt="Unit Tests" />
+    </a>
+    <a href="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/integration_tests.yml" target="_blank">
+        <img src="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/integration_tests.yml/badge.svg" alt="Integration Test" />
+    </a>
+  <a href="https://codecov.io/gh/alteryx/minimum-dependency-generator">
+    <img src="https://codecov.io/gh/alteryx/minimum-dependency-generator/branch/main/graph/badge.svg?token=vRKBsaltyL"/>
+  </a>
+</p>
+<hr>
+
+A GitHub Action to generate minimum Python dependencies.
 
 ## Usage
 
-This GitHub Action provides a task to generate the minimum Python given 1 or more requirement files. 
+This GitHub Action provides a task to generate the minimum Python given 1 or more requirement files.
 
 ```yaml
 steps:
@@ -25,7 +38,7 @@ steps.<step id>.outputs.min_reqs
 
 ## Example
 
-This workflow uses the task to generate minimum dependencies, save the output to a text file, and then will generated an Automated MR if there is a change in the minimum dependencies. 
+This workflow uses the task to generate minimum dependencies, save the output to a text file, and then will generated an Automated MR if there is a change in the minimum dependencies.
 
 ```yaml
 # minimum_dependency_checker.yml
