@@ -70,7 +70,7 @@ jobs:
           requirements_paths: 'test-requirements.txt requirements.txt'
       - name: Update minimum core dependencies
         run: |
-          printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> woodwork/tests/minimum_requirements.txt
+          printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> my_package/deps/minimum_requirements.txt
       - name: Create Pull Request
         uses: FeatureLabs/create-pull-request@v3
         with:
@@ -90,5 +90,5 @@ To install this workflow, add the file above to the following location in your r
 ```
 .github
 └── workflows
-    └── minimum_dependency_check.yml
+    └── minimum_dependency_checker.yml
 ```
