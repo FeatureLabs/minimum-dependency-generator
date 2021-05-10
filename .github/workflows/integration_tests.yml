@@ -19,9 +19,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Run unit tests for minimum dependency generator
+      - name: Install codecov and erase coverage
         run: |
-          python -m pip install -r test-requirements.txt
+          python -m pip install "$(cat test-requirements.txt | grep codecov)"
           coverage erase
       - name: Run Minimum Dependency Generator with 1 file
         id: min_dep_gen_1

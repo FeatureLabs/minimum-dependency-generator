@@ -143,31 +143,6 @@ def test_generate_min_requirements(
     for idx, min_req in enumerate(min_requirements):
         assert expected_min_reqs[idx] == min_req.strip()
 
-from ..minimum_dependency_generator import main
-
-def test_main(
-    ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower
-):
-    min_requirements = []
-    requirements_core = "\n".join([dask_dep, pandas_dep, woodwork_dep, numpy_upper])
-    requirements_koalas = "\n".join([ploty_dep, numpy_lower])
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".txt", prefix="out_requirements"
-    ) as _:
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".txt", prefix="core_requirements"
-        ) as core_f:
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".txt", prefix="koalas_requirements"
-            ) as koalas_f:
-                core_f.writelines(requirements_core)
-                core_f.flush()
-                koalas_f.writelines(requirements_koalas)
-                koalas_f.flush()
-                paths = [core_f.name, koalas_f.name]
-                paths = [' '.join(paths)]
-
-
 
 def verify_mininum(
     mininum_package,
