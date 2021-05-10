@@ -1,6 +1,6 @@
 FROM python:3.7
 
-ADD ci ci
+ADD minimum_dependency_generator minimum_dependency_generator
 ADD requirements.txt requirements.txt
 ADD main.py main.py
 

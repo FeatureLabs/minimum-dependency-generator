@@ -5,10 +5,11 @@ inputs:
     description: 'path to requirements text files'
     required: true
 outputs:
-  minimized_requirements: # id of output
+  min_reqs: # id of output
     description: 'String that contains the minimized requirements (separated by \n)'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
+    - --requirements_paths
     - ${{ inputs.requirements_paths }}
