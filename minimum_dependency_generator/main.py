@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
-import os
 
 from minimum_dependency_generator import generate_min_requirements
+
 
 def main():
     parser = ArgumentParser(description="reads a requirements file and outputs the minimized requirements")
@@ -16,6 +16,7 @@ def main():
 
 def sanitize_string(s):
     return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
 
 if __name__ == '__main__':
     main()
