@@ -132,6 +132,8 @@ def test_generate_min_requirements(
                 )
                 assert isinstance(min_requirements, str)
     min_requirements = min_requirements.split('\n')
+    assert min_requirements[-1] == ''
+    min_requirements = min_requirements[:-1]
     expected_min_reqs = [
         "dask[dataframe]==2.30.0",
         "pandas==0.24.1",

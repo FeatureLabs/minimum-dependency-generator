@@ -91,7 +91,7 @@ def generate_min_requirements(requirements_paths):
     for req in list(requirements_to_specifier.values()):
         min_package = find_min_requirement(req)
         min_requirements.append(str(min_package))
-    min_requirements = '\n'.join(min_requirements)
+    min_requirements = '\n'.join(min_requirements) + '\n'
     return min_requirements
 
     # with open(output_filepath, "w") as f:
