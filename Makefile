@@ -21,4 +21,4 @@ test: lint
 
 .PHONY: testcoverage
 testcoverage: lint
-	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator  --cov-config=../.coveragerc --cache-clear --show-capture=stderr
+	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator  --cov-config=.coveragerc --cache-clear --show-capture=stderr

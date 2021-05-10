@@ -24,4 +24,4 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install -r test-requirements.txt
           coverage erase
-          make test
+          make testcoverage
