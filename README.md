@@ -1,6 +1,6 @@
 # GitHub Action - Minimum Dependency Generator
 
-<p align="center">
+<p align="left">
     <a href="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml" target="_blank">
         <img src="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml/badge.svg" alt="Unit Tests" />
     </a>
