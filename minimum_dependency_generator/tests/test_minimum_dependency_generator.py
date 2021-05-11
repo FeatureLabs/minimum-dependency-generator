@@ -40,6 +40,11 @@ def numpy_upper():
     return "numpy<1.20.0"
 
 
+@pytest.fixture(scope="session", autouse=True)
+def other_req_path():
+    return "-r core-requirements.txt"
+
+
 def test_lower_bound(ploty_dep):
     mininum_package = find_min_requirement(ploty_dep)
     verify_mininum(mininum_package, "plotly", "4.14.0")
@@ -70,6 +75,11 @@ def test_upper_bound():
         find_min_requirement("xgboost<1.3.0")
     with pytest.raises(ValueError, match=error_text):
         find_min_requirement("colorama")
+
+def test_other_requirement(other_req_path):
+    mininum_package = find_min_requirement(other_req_path)
+    assert mininum_package is None
+
 
 
 def test_bound(woodwork_dep):
@@ -107,11 +117,11 @@ def test_wrong_python_env():
 
 
 def test_generate_min_requirements(
-    ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower
+    ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower, other_req_path
 ):
     min_requirements = []
     requirements_core = "\n".join([dask_dep, pandas_dep, woodwork_dep, numpy_upper])
-    requirements_koalas = "\n".join([ploty_dep, numpy_lower])
+    requirements_koalas = "\n".join([ploty_dep, numpy_lower, other_req_path])
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", prefix="out_requirements"
     ) as _:
@@ -131,6 +141,9 @@ def test_generate_min_requirements(
                     requirements_paths=paths
                 )
                 assert isinstance(min_requirements, str)
+    assert '-r' not in min_requirements
+    assert '.txt' not in min_requirements
+    assert 'core-requirements.txt' not in min_requirements
     min_requirements = min_requirements.split('\n')
     assert min_requirements[-1] == ''
     min_requirements = min_requirements[:-1]
