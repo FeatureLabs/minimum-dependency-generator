@@ -55,7 +55,7 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
         return
     requirement = remove_comment(requirement)
     if not verify_python_environment(requirement):
-        return 
+        return
     if ">=" in requirement:
         # mininum version specified (ex - 'package >= 0.0.4')
         package = Requirement(requirement)
