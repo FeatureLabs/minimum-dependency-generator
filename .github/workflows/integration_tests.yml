@@ -29,7 +29,7 @@ jobs:
         with:
           requirements_paths: 'requirements.txt'
       - name: Save the output minimum test requirements
-        run: printf "${{ steps.min_dep_gen_1.outputs.min_reqs }}" >> generated-min--test-reqs.txt
+        run: printf "${{ steps.min_dep_gen_1.outputs.min_reqs }}" >> generated-min-test-reqs.txt
       - name: Verify output
         run: |
           echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "packaging==20.9"
@@ -55,14 +55,12 @@ jobs:
         uses: ./
         with:
           requirements_paths: 'requirements.txt other-requirements.txt'
+      - name: Save the output minimum test and core requirements
+        run: printf "${{ steps.min_dep_gen_3.outputs.min_reqs }}" >> generated-min-other-reqs.txt
       - name: Verify output
         run: |
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "packaging==20.9"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "requests==2.25.1"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "numpy==1.13.1"
-          echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -v "-r"
-          echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -v ".txt"
-          echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -v "core-requirements.txt"
-          echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -v "-r core-requirements.txt"
 
