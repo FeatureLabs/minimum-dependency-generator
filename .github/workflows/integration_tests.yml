@@ -54,7 +54,7 @@ jobs:
         id: min_dep_gen_3
         uses: ./
         with:
-          requirements_paths: 'test-requirements.txt other-requirements.txt'
+          requirements_paths: 'requirements.txt other-requirements.txt'
       - name: Verify output
         run: |
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "packaging==20.9"
