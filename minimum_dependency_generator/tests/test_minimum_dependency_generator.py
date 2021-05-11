@@ -76,10 +76,10 @@ def test_upper_bound():
     with pytest.raises(ValueError, match=error_text):
         find_min_requirement("colorama")
 
+
 def test_other_requirement(other_req_path):
     mininum_package = find_min_requirement(other_req_path)
     assert mininum_package is None
-
 
 
 def test_bound(woodwork_dep):

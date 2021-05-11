@@ -25,6 +25,7 @@ def remove_comment(requirement):
         requirement = requirement.split("#")[0]
     return requirement
 
+
 def is_requirement_path(requirement):
     if '.txt' in requirement and '-r' in requirement:
         return True
