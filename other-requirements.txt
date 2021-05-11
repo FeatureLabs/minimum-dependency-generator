@@ -1,0 +1,2 @@
+-r core-requirements.txt 
+numpy>=1.13.1
