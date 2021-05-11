@@ -35,7 +35,7 @@ jobs:
           echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "packaging==20.9"
           echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "requests==2.25.1"
           echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
-      - name: Run Minimum Dependency Generator with 2 files
+      - name: Run Minimum Dependency Generator with 2 files, no other path reference
         id: min_dep_gen_2
         uses: ./
         with:
@@ -48,3 +48,15 @@ jobs:
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "pytest==6.2.4"
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "isort==5.8.0"
           echo "${{ steps.min_dep_gen_2.outputs.min_reqs }}" | grep -c "pytest-cov==2.11.1"
+      - name: Create other requirements file
+        run: printf "-r core-requirements.txt" >> other-requirements.txt
+      - name: Run Minimum Dependency Generator with 2 files, path reference
+        id: min_dep_gen_2
+        uses: ./
+        with:
+          requirements_paths: 'test-requirements.txt other-requirements.txt'
+      - name: Verify output
+        run: |
+          echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "packaging==20.9"
+          echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "requests==2.25.1"
+          echo "${{ steps.min_dep_gen_1.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
