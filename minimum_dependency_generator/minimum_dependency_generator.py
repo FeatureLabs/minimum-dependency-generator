@@ -26,6 +26,12 @@ def remove_comment(requirement):
     return requirement
 
 
+def is_requirement_path(requirement):
+    if '.txt' in requirement and '-r' in requirement:
+        return True
+    return False
+
+
 def find_operator_version(package, operator):
     version = None
     for x in package.specifier:
@@ -43,9 +49,13 @@ def determine_package_name(package):
 
 
 def find_min_requirement(requirement, python_version="3.7", major_python_version="py3"):
+    if is_requirement_path(requirement):
+        # skip requirement paths
+        # ex '-r core_requirements.txt'
+        return
     requirement = remove_comment(requirement)
     if not verify_python_environment(requirement):
-        return None
+        return
     if ">=" in requirement:
         # mininum version specified (ex - 'package >= 0.0.4')
         package = Requirement(requirement)
@@ -79,6 +89,10 @@ def generate_min_requirements(requirements_paths):
         with open(path) as f:
             requirements.extend(f.readlines())
         for req in requirements:
+            if is_requirement_path(req):
+                # skip requirement paths
+                # ex '-r core_requirements.txt'
+                continue
             package = Requirement(remove_comment(req))
             name = determine_package_name(package)
             if name in requirements_to_specifier:
