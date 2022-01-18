@@ -13,3 +13,6 @@ runs:
   args:
     - --requirements_paths
     - ${{ inputs.requirements_paths }}
+branding:
+  icon: 'align-center'  
+  color: 'green'
