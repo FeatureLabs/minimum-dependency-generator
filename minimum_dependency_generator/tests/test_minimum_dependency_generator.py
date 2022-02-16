@@ -6,7 +6,8 @@ from packaging.specifiers import Specifier
 
 from ..minimum_dependency_generator import (
     find_min_requirement,
-    generate_min_requirements
+    generate_min_requirements,
+    parse_setupcfg
 )
 
 
@@ -115,6 +116,18 @@ def test_wrong_python_env():
     )
     verify_mininum(mininum_package, "ipython", "7.16.0")
 
+def test_parse_setupcfg(
+    dask_dep, pandas_dep, woodwork_dep, numpy_upper
+):
+    start_of_file = ['[metadata]', 'name = example_package', " ", '[options]', 'install_requires =']
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".cfg", prefix="setup"
+    ) as setup_cfg_f:
+        requirements_core = "\n \t".join(["\t", dask_dep, pandas_dep, woodwork_dep, numpy_upper])
+        setup_cfg_f.writelines('\n'.join(start_of_file))
+        setup_cfg_f.writelines(requirements_core)
+        setup_cfg_f.flush()
+        parse_setupcfg(setup_cfg_f.name, 'install_requires')
 
 def test_generate_min_requirements(
     ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower, other_req_path

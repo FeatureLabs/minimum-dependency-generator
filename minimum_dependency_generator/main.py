@@ -1,14 +1,19 @@
 from argparse import ArgumentParser
 
-from minimum_dependency_generator import generate_min_requirements
+from minimum_dependency_generator import generate_min_requirements, parse_setupcfg
 
 
 def main():
     parser = ArgumentParser(description="reads a requirements file and outputs the minimized requirements")
     parser.add_argument('--requirements_paths', nargs='+',
                         help='path for requirements to minimize', required=True)
+    parser.add_argument('--options_names', nargs='+',
+                        help='path for requirements to minimize')
     args = parser.parse_args()
-    requirements = generate_min_requirements(args.requirements_paths)
+    if args.options_names:
+        requirements = parse_setupcfg(args.requirements_paths, parse_setupcfg)
+    else:
+        requirements = generate_min_requirements(args.requirements_paths)
     requirements = sanitize_string(requirements)
     # DO NOT remove, the GH action needs to output
     print("::set-output name=min_reqs::{}".format(requirements))

@@ -108,5 +108,10 @@ def generate_min_requirements(requirements_paths):
     min_requirements = '\n'.join(min_requirements) + '\n'
     return min_requirements
 
-    # with open(output_filepath, "w") as f:
-    #     f.writelines(min_requirements)
+
+def parse_setupcfg(setup_cfg_path, options_to_parse):
+    import configparser
+    config = configparser.ConfigParser()
+    config.read(setup_cfg_path)
+    requirements_list = config['options'][options_to_parse].split('\n')
+
