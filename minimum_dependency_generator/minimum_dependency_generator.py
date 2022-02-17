@@ -1,4 +1,5 @@
 from collections import defaultdict
+import configparser
 
 from packaging.requirements import Requirement
 from packaging.specifiers import Specifier
@@ -110,8 +111,31 @@ def generate_min_requirements(requirements_paths):
 
 
 def parse_setupcfg(setup_cfg_path, options_to_parse):
-    import configparser
+    requirements_to_specifier = defaultdict(list)
+    min_requirements = []
+
     config = configparser.ConfigParser()
     config.read(setup_cfg_path)
-    requirements_list = config['options'][options_to_parse].split('\n')
+    if not isinstance(options_to_parse, list):
+        options_to_parse = [options_to_parse]
+    requirements = []
+    for option in options_to_parse:
+        setup_reqs = config['options'][option]
+        setup_reqs = setup_reqs.split('\n')
+        requirements += [x for x in setup_reqs if len(x) > 1]
+    for req in requirements:
+        package = Requirement(remove_comment(req))
+        name = determine_package_name(package)
+        if name in requirements_to_specifier:
+            prev_req = Requirement(requirements_to_specifier[name])
+            new_req = prev_req.specifier & package.specifier
+            requirements_to_specifier[name] = name + str(new_req)
+        else:
+            requirements_to_specifier[name] = name + str(package.specifier)
+
+    for req in list(requirements_to_specifier.values()):
+        min_package = find_min_requirement(req)
+        min_requirements.append(str(min_package))
+    min_requirements = '\n'.join(min_requirements) + '\n'
+    return min_requirements
 

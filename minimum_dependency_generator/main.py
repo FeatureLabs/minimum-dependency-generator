@@ -14,6 +14,7 @@ def main():
         requirements = parse_setupcfg(args.requirements_paths, parse_setupcfg)
     else:
         requirements = generate_min_requirements(args.requirements_paths)
+        print(requirements)
     requirements = sanitize_string(requirements)
     # DO NOT remove, the GH action needs to output
     print("::set-output name=min_reqs::{}".format(requirements))

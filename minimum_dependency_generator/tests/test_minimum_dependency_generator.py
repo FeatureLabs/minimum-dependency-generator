@@ -117,17 +117,32 @@ def test_wrong_python_env():
     verify_mininum(mininum_package, "ipython", "7.16.0")
 
 def test_parse_setupcfg(
-    dask_dep, pandas_dep, woodwork_dep, numpy_upper
+    dask_dep, pandas_dep, woodwork_dep, numpy_lower
 ):
     start_of_file = ['[metadata]', 'name = example_package', " ", '[options]', 'install_requires =']
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".cfg", prefix="setup"
     ) as setup_cfg_f:
-        requirements_core = "\n \t".join(["\t", dask_dep, pandas_dep, woodwork_dep, numpy_upper])
+        requirements_core = "\n \t".join(["\t", dask_dep, pandas_dep, woodwork_dep, numpy_lower])
         setup_cfg_f.writelines('\n'.join(start_of_file))
         setup_cfg_f.writelines(requirements_core)
         setup_cfg_f.flush()
-        parse_setupcfg(setup_cfg_f.name, 'install_requires')
+        min_requirements = parse_setupcfg(setup_cfg_f.name, 'install_requires')
+    assert '-r' not in min_requirements
+    assert '.txt' not in min_requirements
+    assert 'core-requirements.txt' not in min_requirements
+    min_requirements = min_requirements.split('\n')
+    assert min_requirements[-1] == ''
+    min_requirements = min_requirements[:-1]
+    expected_min_reqs = [
+        "dask[dataframe]==2.30.0",
+        "pandas==0.24.1",
+        "woodwork==0.0.11",
+        "numpy==1.15.4",
+    ]
+    assert len(min_requirements) == len(expected_min_reqs)
+    for idx, min_req in enumerate(min_requirements):
+        assert expected_min_reqs[idx] == min_req.strip()
 
 def test_generate_min_requirements(
     ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower, other_req_path
