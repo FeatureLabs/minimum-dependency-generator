@@ -73,10 +73,10 @@ jobs:
         run: printf "${{ steps.min_dep_gen_4.outputs.min_reqs }}" >> generated-min-setupcfg-test-reqs.txt
       - name: Verify output
         run: |
-          echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pip==22.0.2"
-          echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
-          echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "wheel==0.37.1"
-      - name: Run Minimum Dependency Generator with setup cfg
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "pip==22.0.2"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "wheel==0.37.1"
+      - name: Run Minimum Dependency Generator with setup cfg, options and extras_require
         id: min_dep_gen_5
         uses: ./
         with:
