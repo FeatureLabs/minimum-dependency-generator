@@ -102,11 +102,14 @@ def parse_setup_cfg(paths, options, extras_require):
 
     requirements = []
     if options:
-        options = options.split(' ')
+        print(options)
+        if ' ' in options:
+            options = options.split(' ')
         for option in options:
             requirements += clean_cfg_section(config['options'][option])
     if extras_require:
-        extras_require = extras_require.split(' ')
+        if ' ' in extras_require:
+            extras_require = extras_require.split(' ')
         for extra in extras_require:
             requirements += clean_cfg_section(config['options.extras_require'][extra])
     return requirements
