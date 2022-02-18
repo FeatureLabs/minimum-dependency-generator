@@ -1,6 +1,6 @@
 # GitHub Action - Minimum Dependency Generator
 
-<p align="left">
+<p align="center">
     <a href="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml" target="_blank">
         <img src="https://github.com/alteryx/minimum-dependency-generator/actions/workflows/unit_tests.yml/badge.svg" alt="Unit Tests" />
     </a>
@@ -17,18 +17,37 @@ A GitHub Action to generate minimum Python dependencies.
 
 ## Usage
 
-This GitHub Action provides a task to generate the minimum Python given 1 or more requirement files.
+This GitHub Action provides a task to generate the minimum Python given 1 or more requirements. The requirements can be defined in text files or a setup.cfg
 
+#### Text Files
 ```yaml
 steps:
   - name: Run Minimum Dependency Generator
     id: min_dep_gen
-    uses: alteryx/minimum-dependency-generator@v1
+    uses: alteryx/minimum-dependency-generator@v3
     with:
       paths: 'test-requirements.txt requirements.txt'
   - name: Save the output minimum requirements
     run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
 ```
+
+#### setup.cfg
+
+```yaml
+steps:
+  - name: Run Minimum Dependency Generator
+    id: min_dep_gen
+    uses: alteryx/minimum-dependency-generator@v3
+    with:
+      paths: 'setup.cfg'
+      options: 'install_requires setup_requires'
+      extras_require: 'dev test'
+  - name: Save the output minimum requirements
+    run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
+```
+- The **options** can either be `install_requires`, or `setup_requires`, or both. 
+- The **extras_require** is optional, and depends on if you package has plugin-like dependencies. 
+- However, either **options** or **extra_requires** must be defined (or both). 
 
 The returned value of a task is available in later steps from the output `min_reqs`.
 
@@ -41,7 +60,7 @@ steps.<step id>.outputs.min_reqs
 This workflow uses the task to generate minimum dependencies, save the output to a text file, and then will generated an Automated MR if there is a change in the minimum dependencies.
 
 ```yaml
-# minimum_dependency_checker.yml
+# .github/workflows/minimum_dependency_checker.yml
 name: Minimum Dependency Checker
 on:
   push:
@@ -59,13 +78,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-      - name: Set up python 3.7
+      - name: Set up python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.8
       - name: Run Minimum Dependency Generator
         id: min_dep_gen
-        uses: alteryx/minimum-dependency-generator@v1
+        uses: alteryx/minimum-dependency-generator@v3
         with:
           paths: 'test-requirements.txt requirements.txt'
       - name: Update minimum core dependencies
@@ -85,6 +104,8 @@ jobs:
           base: main
 ```
 
+> If you have a setup.cfg, you will need to change the `paths` argument, and specify either **options** or **extra_requires** (or you can do both).
+           
 To install this workflow, add the file above to the following location in your repository.
 
 ```
