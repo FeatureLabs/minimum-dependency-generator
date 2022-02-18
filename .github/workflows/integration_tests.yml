@@ -70,6 +70,16 @@ jobs:
           paths: 'setup_example.cfg'
           options: 'install_requires'
           extras_require: 'dev'
+      - name: Save the output minimum install_requires and dev requirements
+        run: printf "${{ steps.min_dep_gen_4.outputs.min_reqs }}" >> generated-min-setupcfg-reqs.txt
+      - name: Verify output
+        run: |
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "scipy==1.3.3"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "pandas==1.3.0"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "featuretools==1.5.0"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "woodwork==0.8.1"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "autopep8==1.6.1"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "setuptools==47"
       - name: Run Minimum Dependency Generator with setup cfg and options
         id: min_dep_gen_5
         uses: ./
@@ -77,4 +87,17 @@ jobs:
           paths: 'setup_example.cfg'
           options: 'install_requires setup_requires'
           extras_require: 'dev test'
+      - name: Save the output minimum install_requires, setup_requires and dev, test requirements
+        run: printf "${{ steps.min_dep_gen_5.outputs.min_reqs }}" >> generated-min-setupcfg-multiple-reqs.txt
 
+      - name: Verify output
+        run: |
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "scipy==1.3.3"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "pandas==1.3.0"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "featuretools==1.5.0"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "woodwork==0.8.1"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "autopep8==1.6.1"
+          echo "${{ steps.min_dep_gen_4.outputs.min_reqs }}" | grep -c "setuptools==47"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "pip==22.0.0"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "wheel==1.3.3"
+          echo "${{ steps.min_dep_gen_5.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
