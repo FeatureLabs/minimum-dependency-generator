@@ -1,48 +1,9 @@
 import sys
-import tempfile
 
 import pytest
 from packaging.specifiers import Specifier
 
-from ..minimum_dependency_generator import (
-    find_min_requirement,
-    generate_min_requirements
-)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def pandas_dep():
-    return "pandas>=0.24.1,<2.0.0,!=1.1.0,!=1.1.1"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def woodwork_dep():
-    return "woodwork==0.0.11"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def dask_dep():
-    return "dask[dataframe]>=2.30.0,<2012.12.0"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def ploty_dep():
-    return "plotly>=4.14.0"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def numpy_lower():
-    return "numpy>=1.15.4"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def numpy_upper():
-    return "numpy<1.20.0"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def other_req_path():
-    return "-r core-requirements.txt"
+from ..minimum_dependency_generator import find_min_requirement
 
 
 def test_lower_bound(ploty_dep):
@@ -70,7 +31,7 @@ def test_marker():
 
 
 def test_upper_bound():
-    error_text = "Operator does not exist or is an invalid operator. Please specify the mininum version."
+    error_text = "Operator does not exist or is an invalid operator"
     with pytest.raises(ValueError, match=error_text):
         find_min_requirement("xgboost<1.3.0")
     with pytest.raises(ValueError, match=error_text):
@@ -87,7 +48,7 @@ def test_bound(woodwork_dep):
     verify_mininum(mininum_package, "woodwork", "0.0.11")
 
 
-def test_extra_requires():
+def test_extra_require():
     mininum_package = find_min_requirement("dask>=2.30.0")
     verify_mininum(mininum_package, "dask", "2.30.0", required_extra=None)
     mininum_package = find_min_requirement("dask[dataframe]<2012.12.0,>=2.30.0")
@@ -114,49 +75,6 @@ def test_wrong_python_env():
         "ipython==7.16.0; python_version=='" + python_version + "'"
     )
     verify_mininum(mininum_package, "ipython", "7.16.0")
-
-
-def test_generate_min_requirements(
-    ploty_dep, dask_dep, pandas_dep, woodwork_dep, numpy_upper, numpy_lower, other_req_path
-):
-    min_requirements = []
-    requirements_core = "\n".join([dask_dep, pandas_dep, woodwork_dep, numpy_upper])
-    requirements_koalas = "\n".join([ploty_dep, numpy_lower, other_req_path])
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".txt", prefix="out_requirements"
-    ) as _:
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".txt", prefix="core_requirements"
-        ) as core_f:
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".txt", prefix="koalas_requirements"
-            ) as koalas_f:
-                core_f.writelines(requirements_core)
-                core_f.flush()
-                koalas_f.writelines(requirements_koalas)
-                koalas_f.flush()
-                paths = [core_f.name, koalas_f.name]
-                paths = [' '.join(paths)]
-                min_requirements = generate_min_requirements(
-                    requirements_paths=paths
-                )
-                assert isinstance(min_requirements, str)
-    assert '-r' not in min_requirements
-    assert '.txt' not in min_requirements
-    assert 'core-requirements.txt' not in min_requirements
-    min_requirements = min_requirements.split('\n')
-    assert min_requirements[-1] == ''
-    min_requirements = min_requirements[:-1]
-    expected_min_reqs = [
-        "dask[dataframe]==2.30.0",
-        "pandas==0.24.1",
-        "woodwork==0.0.11",
-        "numpy==1.15.4",
-        "plotly==4.14.0",
-    ]
-    assert len(min_requirements) == len(expected_min_reqs)
-    for idx, min_req in enumerate(min_requirements):
-        assert expected_min_reqs[idx] == min_req.strip()
 
 
 def verify_mininum(

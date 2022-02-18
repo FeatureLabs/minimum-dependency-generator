@@ -25,7 +25,7 @@ steps:
     id: min_dep_gen
     uses: alteryx/minimum-dependency-generator@v1
     with:
-      requirements_paths: 'test-requirements.txt requirements.txt'
+      paths: 'test-requirements.txt requirements.txt'
   - name: Save the output minimum requirements
     run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
 ```
@@ -67,7 +67,7 @@ jobs:
         id: min_dep_gen
         uses: alteryx/minimum-dependency-generator@v1
         with:
-          requirements_paths: 'test-requirements.txt requirements.txt'
+          paths: 'test-requirements.txt requirements.txt'
       - name: Update minimum core dependencies
         run: |
           printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> my_package/deps/minimum_requirements.txt

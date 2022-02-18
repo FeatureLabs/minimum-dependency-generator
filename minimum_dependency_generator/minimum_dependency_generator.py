@@ -1,3 +1,5 @@
+import configparser
+import os
 from collections import defaultdict
 
 from packaging.requirements import Requirement
@@ -48,6 +50,12 @@ def determine_package_name(package):
     return name
 
 
+def clean_cfg_section(section):
+    section = section.split('\n')
+    section = [x for x in section if len(x) > 1]
+    return section
+
+
 def find_min_requirement(requirement, python_version="3.7", major_python_version="py3"):
     if is_requirement_path(requirement):
         # skip requirement paths
@@ -70,43 +78,68 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
         # mininum version not specified (ex - 'package < 0.0.4')
         # version not specified (ex - 'package')
         raise ValueError(
-            "Operator does not exist or is an invalid operator. Please specify the mininum version."
+            "Operator does not exist or is an invalid operator (such as '<'). Please specify the mininum version ('>=', '==')."
         )
     name = determine_package_name(package)
     min_requirement = Requirement(name + str(mininum))
     return min_requirement
 
 
-def generate_min_requirements(requirements_paths):
+def clean_list_length_one(item):
+    if isinstance(item, list) and ' ' in item[0]:
+        item = item[0].split(' ')
+    return item
+
+
+def parse_requirements_text_file(paths):
+    requirements = []
+    paths = clean_list_length_one(paths)
+
+    for path in paths:
+        with open(path) as f:
+            requirements.extend(f.readlines())
+    return requirements
+
+
+def parse_setup_cfg(paths, options, extras_require):
+    config = configparser.ConfigParser()
+    config.read(paths[0])
+
+    requirements = []
+    if options:
+        for option in clean_list_length_one(options):
+            requirements += clean_cfg_section(config['options'][option])
+    if extras_require:
+        for extra in clean_list_length_one(extras_require):
+            requirements += clean_cfg_section(config['options.extras_require'][extra])
+    return requirements
+
+
+def generate_min_requirements(paths, options=None, extras_require=None):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
-    if isinstance(requirements_paths, list) and ' ' in requirements_paths[0]:
-        requirements_paths = requirements_paths[0].split(' ')
+    if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
+        requirements = parse_setup_cfg(paths, options, extras_require)
+    else:
+        requirements = parse_requirements_text_file(paths)
 
-    for path in requirements_paths:
-        requirements = []
-        with open(path) as f:
-            requirements.extend(f.readlines())
-        for req in requirements:
-            if is_requirement_path(req):
-                # skip requirement paths
-                # ex '-r core_requirements.txt'
-                continue
-            package = Requirement(remove_comment(req))
-            name = determine_package_name(package)
-            if name in requirements_to_specifier:
-                prev_req = Requirement(requirements_to_specifier[name])
-                new_req = prev_req.specifier & package.specifier
-                requirements_to_specifier[name] = name + str(new_req)
-            else:
-                requirements_to_specifier[name] = name + str(package.specifier)
+    for req in requirements:
+        if is_requirement_path(req):
+            # skip requirement paths
+            # ex '-r core_requirements.txt'
+            continue
+        package = Requirement(remove_comment(req))
+        name = determine_package_name(package)
+        if name in requirements_to_specifier:
+            prev_req = Requirement(requirements_to_specifier[name])
+            new_req = prev_req.specifier & package.specifier
+            requirements_to_specifier[name] = name + str(new_req)
+        else:
+            requirements_to_specifier[name] = name + str(package.specifier)
 
-    for req in list(requirements_to_specifier.values()):
+    for req in list(sorted(requirements_to_specifier.values())):
         min_package = find_min_requirement(req)
         min_requirements.append(str(min_package))
     min_requirements = '\n'.join(min_requirements) + '\n'
     return min_requirements
-
-    # with open(output_filepath, "w") as f:
-    #     f.writelines(min_requirements)

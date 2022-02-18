@@ -16,9 +16,9 @@ lint-fix:
 	isort minimum_dependency_generator/
 
 .PHONY: test
-test: lint
+test:
 	pytest minimum_dependency_generator/ --cache-clear --show-capture=stderr
 
 .PHONY: testcoverage
-testcoverage: lint
+testcoverage:
 	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator  --cov-config=.coveragerc --cache-clear --show-capture=stderr

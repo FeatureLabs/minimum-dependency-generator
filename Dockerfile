@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.8
 
 ADD minimum_dependency_generator minimum_dependency_generator
 ADD requirements.txt requirements.txt
