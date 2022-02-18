@@ -68,6 +68,13 @@ jobs:
         uses: ./
         with:
           paths: 'setup_example.cfg'
+          options: 'install_requires'
+          extras_require: 'dev'
+      - name: Run Minimum Dependency Generator with setup cfg and options
+        id: min_dep_gen_5
+        uses: ./
+        with:
+          paths: 'setup_example.cfg'
           options: 'install_requires setup_requires'
           extras_require: 'dev test'
 
