@@ -86,8 +86,10 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
 
 
 def clean_list_length_one(item):
-    if isinstance(item, list) and ' ' in item[0]:
+    if isinstance(item, list) and len(item) == 1 and ' ' in item[0]:
         item = item[0].split(' ')
+    if item == ['']:
+        return None
     return item
 
 
@@ -106,11 +108,13 @@ def parse_setup_cfg(paths, options, extras_require):
     config.read(paths[0])
 
     requirements = []
-    if options:
-        for option in clean_list_length_one(options):
+    options = clean_list_length_one(options)
+    extras_require = clean_list_length_one(extras_require)
+    if options and len(options) > 0:
+        for option in options:
             requirements += clean_cfg_section(config['options'][option])
-    if extras_require:
-        for extra in clean_list_length_one(extras_require):
+    if extras_require and len(extras_require) > 0:
+        for extra in extras_require:
             requirements += clean_cfg_section(config['options.extras_require'][extra])
     return requirements
 
