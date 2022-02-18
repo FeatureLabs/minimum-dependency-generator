@@ -1,9 +1,15 @@
 name: 'Minimum Dependency Generator'
 description: 'Generate minimum dependencies with given X requirement text files.'
 inputs:
-  requirements_paths:
-    description: 'path to requirements text files'
+  paths:
+    description: 'path to requirements text files or setup.cfg'
     required: true
+  options:
+    description: 'section of setup.cfg (in [options])'
+    required: false
+  extras_require:
+    description: 'section of setup.cfg (in [options.extras_require])'
+    required: false
 outputs:
   min_reqs: # id of output
     description: 'String that contains the minimized requirements (separated by \n)'
@@ -11,8 +17,10 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - --requirements_paths
-    - ${{ inputs.requirements_paths }}
+    - --paths
+    - ${{ inputs.paths }}
+    - ${{ inputs.options }}
+    - ${{ inputs.extras_require }}
 branding:
   icon: 'align-center'  
   color: 'green'

@@ -1,52 +1,20 @@
-from collections import defaultdict
 import configparser
+import os
+from collections import defaultdict
 
 from packaging.requirements import Requirement
 from packaging.specifiers import Specifier
 
-
-def create_strict_min(package_version):
-    return Specifier("==" + package_version)
-
-
-def verify_python_environment(requirement):
-    package = Requirement(requirement)
-    if not package.marker:
-        # no python version specified in requirement
-        return True
-    elif package.marker and package.marker.evaluate():
-        # evaluate --> evaluating the given marker against the current Python process environment
-        return True
-    return False
-
-
-def remove_comment(requirement):
-    if "#" in requirement:
-        # remove everything after comment character
-        requirement = requirement.split("#")[0]
-    return requirement
-
-
-def is_requirement_path(requirement):
-    if '.txt' in requirement and '-r' in requirement:
-        return True
-    return False
-
-
-def find_operator_version(package, operator):
-    version = None
-    for x in package.specifier:
-        if x.operator == operator:
-            version = x.version
-            break
-    return version
-
-
-def determine_package_name(package):
-    name = package.name
-    if len(package.extras) > 0:
-        name = package.name + "[" + package.extras.pop() + "]"
-    return name
+from .utils import (
+    clean_cfg_section,
+    create_strict_min,
+    determine_package_name,
+    find_operator_version,
+    is_requirement_path,
+    remove_comment,
+    verify_list,
+    verify_python_environment
+)
 
 
 def find_min_requirement(requirement, python_version="3.7", major_python_version="py3"):
@@ -78,52 +46,49 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
     return min_requirement
 
 
-def generate_min_requirements(requirements_paths):
-    requirements_to_specifier = defaultdict(list)
-    min_requirements = []
+def parse_requirements_text_file(paths):
+    requirements = []
+    if isinstance(paths, list) and ' ' in paths[0]:
+        paths = paths[0].split(' ')
 
-    if isinstance(requirements_paths, list) and ' ' in requirements_paths[0]:
-        requirements_paths = requirements_paths[0].split(' ')
-
-    for path in requirements_paths:
-        requirements = []
+    for path in paths:
         with open(path) as f:
             requirements.extend(f.readlines())
-        for req in requirements:
-            if is_requirement_path(req):
-                # skip requirement paths
-                # ex '-r core_requirements.txt'
-                continue
-            package = Requirement(remove_comment(req))
-            name = determine_package_name(package)
-            if name in requirements_to_specifier:
-                prev_req = Requirement(requirements_to_specifier[name])
-                new_req = prev_req.specifier & package.specifier
-                requirements_to_specifier[name] = name + str(new_req)
-            else:
-                requirements_to_specifier[name] = name + str(package.specifier)
-
-    for req in list(requirements_to_specifier.values()):
-        min_package = find_min_requirement(req)
-        min_requirements.append(str(min_package))
-    min_requirements = '\n'.join(min_requirements) + '\n'
-    return min_requirements
+    return requirements
 
 
-def parse_setupcfg(setup_cfg_path, options_to_parse):
+def parse_setup_cfg(paths, options, extras_require):
+    config = configparser.ConfigParser()
+    config.read(paths[0])
+
+    requirements = []
+    if options:
+        options = verify_list(options)
+        for option in options:
+            requirements += clean_cfg_section(config['options'][option])
+    if extras_require:
+        options = verify_list(options)
+        for extra in extras_require:
+            requirements += clean_cfg_section(config['options.extras_require'][extra])
+    return requirements
+
+
+def generate_min_requirements(paths, options=None, extras_require=None):
+    is_requirements_text = False
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
-    config = configparser.ConfigParser()
-    config.read(setup_cfg_path)
-    if not isinstance(options_to_parse, list):
-        options_to_parse = [options_to_parse]
-    requirements = []
-    for option in options_to_parse:
-        setup_reqs = config['options'][option]
-        setup_reqs = setup_reqs.split('\n')
-        requirements += [x for x in setup_reqs if len(x) > 1]
+    if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
+        requirements = parse_setup_cfg(paths, options, extras_require)
+    else:
+        is_requirements_text = True
+        requirements = parse_requirements_text_file(paths)
+
     for req in requirements:
+        if is_requirement_path(req):
+            # skip requirement paths
+            # ex '-r core_requirements.txt'
+            continue
         package = Requirement(remove_comment(req))
         name = determine_package_name(package)
         if name in requirements_to_specifier:
@@ -138,4 +103,3 @@ def parse_setupcfg(setup_cfg_path, options_to_parse):
         min_requirements.append(str(min_package))
     min_requirements = '\n'.join(min_requirements) + '\n'
     return min_requirements
-

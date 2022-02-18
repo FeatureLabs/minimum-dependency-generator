@@ -23,11 +23,11 @@ jobs:
         run: |
           python -m pip install "$(cat test-requirements.txt | grep codecov)"
           coverage erase
-      - name: Run Minimum Dependency Generator with 1 file
+      - name: Run Minimum Dependency Generator with 1 text file
         id: min_dep_gen_1
         uses: ./
         with:
-          requirements_paths: 'requirements.txt'
+          paths: 'requirements.txt'
       - name: Save the output minimum test requirements
         run: printf "${{ steps.min_dep_gen_1.outputs.min_reqs }}" >> generated-min-test-reqs.txt
       - name: Verify output
@@ -39,7 +39,7 @@ jobs:
         id: min_dep_gen_2
         uses: ./
         with:
-          requirements_paths: 'test-requirements.txt requirements.txt'
+          paths: 'test-requirements.txt requirements.txt'
       - name: Save the output minimum test and core requirements
         run: printf "${{ steps.min_dep_gen_2.outputs.min_reqs }}" >> generated-min-reqs.txt
       - name: Verify output
@@ -54,7 +54,7 @@ jobs:
         id: min_dep_gen_3
         uses: ./
         with:
-          requirements_paths: 'requirements.txt other-requirements.txt'
+          paths: 'requirements.txt other-requirements.txt'
       - name: Save the output minimum test and core requirements
         run: printf "${{ steps.min_dep_gen_3.outputs.min_reqs }}" >> generated-min-other-reqs.txt
       - name: Verify output
@@ -63,4 +63,19 @@ jobs:
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "requests==2.25.1"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "numpy==1.13.1"
+      - name: Add package info to setup cfg
+        run: echo -e "
+      - name: Run Minimum Dependency Generator with setup cfg
+        id: min_dep_gen_4
+        uses: ./
+        with:
+          paths: 'requirements.txt'
+          options: 'install_requires'
+      - name: Run Minimum Dependency Generator with setup cfg with extra requires
+        id: min_dep_gen_4
+        uses: ./
+        with:
+          paths: 'requirements.txt'
+          options: 'install_requires'
+          extras_require: 'dev'
 
