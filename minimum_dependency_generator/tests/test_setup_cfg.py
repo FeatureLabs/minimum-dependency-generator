@@ -44,13 +44,14 @@ def test_with_setup_cfg(
     min_requirements = min_requirements[:-1]
     expected_min_reqs = [
         "dask[dataframe]==2.30.0",
-        "pandas==0.24.1",
-        "woodwork==0.0.11",
         "numpy==1.15.4",
-        "setuptools==47",
+        "pandas==0.24.1",
         "plotly==4.14.0",
-        "pytest==5.2.0"
+        "pytest==5.2.0",
+        "setuptools==47",
+        "woodwork==0.0.11",
     ]
+    expected_min_reqs = sorted(expected_min_reqs)
     assert len(min_requirements) == len(expected_min_reqs)
     for idx, min_req in enumerate(min_requirements):
         assert expected_min_reqs[idx] == min_req.strip()

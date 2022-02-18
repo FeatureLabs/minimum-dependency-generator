@@ -138,7 +138,7 @@ def generate_min_requirements(paths, options=None, extras_require=None):
         else:
             requirements_to_specifier[name] = name + str(package.specifier)
 
-    for req in list(requirements_to_specifier.values()):
+    for req in list(sorted(requirements_to_specifier.values())):
         min_package = find_min_requirement(req)
         min_requirements.append(str(min_package))
     min_requirements = '\n'.join(min_requirements) + '\n'
