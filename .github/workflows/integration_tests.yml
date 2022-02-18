@@ -63,19 +63,11 @@ jobs:
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "requests==2.25.1"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "wheel==0.36.2"
           echo "${{ steps.min_dep_gen_3.outputs.min_reqs }}" | grep -c "numpy==1.13.1"
-      - name: Add package info to setup cfg
-        run: echo -e "
       - name: Run Minimum Dependency Generator with setup cfg
         id: min_dep_gen_4
         uses: ./
         with:
-          paths: 'requirements.txt'
-          options: 'install_requires'
-      - name: Run Minimum Dependency Generator with setup cfg with extra requires
-        id: min_dep_gen_4
-        uses: ./
-        with:
-          paths: 'requirements.txt'
-          options: 'install_requires'
-          extras_require: 'dev'
+          paths: 'setup_example.cfg'
+          options: 'install_requires setup_requires'
+          extras_require: 'dev test'
 
