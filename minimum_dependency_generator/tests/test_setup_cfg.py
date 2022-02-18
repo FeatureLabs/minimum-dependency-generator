@@ -33,8 +33,8 @@ def test_with_setup_cfg(
         setup_cfg_f.flush()
 
         paths = [setup_cfg_f.name]
-        options = 'install_requires setup_requires'
-        extra_requires = 'koalas test'
+        options = ['install_requires setup_requires']
+        extra_requires = ['koalas test']
         min_requirements = generate_min_requirements(paths, options, extra_requires)
     assert '-r' not in min_requirements
     assert '.txt' not in min_requirements
