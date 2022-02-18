@@ -31,7 +31,7 @@ def test_marker():
 
 
 def test_upper_bound():
-    error_text = "Operator does not exist or is an invalid operator. Please specify the mininum version."
+    error_text = "Operator does not exist or is an invalid operator"
     with pytest.raises(ValueError, match=error_text):
         find_min_requirement("xgboost<1.3.0")
     with pytest.raises(ValueError, match=error_text):

@@ -78,7 +78,7 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
         # mininum version not specified (ex - 'package < 0.0.4')
         # version not specified (ex - 'package')
         raise ValueError(
-            "Operator does not exist or is an invalid operator. Please specify the mininum version."
+            "Operator does not exist or is an invalid operator (such as '<'). Please specify the mininum version ('>=', '==')."
         )
     name = determine_package_name(package)
     min_requirement = Requirement(name + str(mininum))
