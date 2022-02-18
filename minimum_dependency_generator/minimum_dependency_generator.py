@@ -106,10 +106,10 @@ def parse_setup_cfg(paths, options, extras_require):
     config.read(paths[0])
 
     requirements = []
-    if options:
+    if options and len(options) > 0:
         for option in clean_list_length_one(options):
             requirements += clean_cfg_section(config['options'][option])
-    if extras_require:
+    if extras_require and len(extras_require) > 0:
         for extra in clean_list_length_one(extras_require):
             requirements += clean_cfg_section(config['options.extras_require'][extra])
     return requirements
