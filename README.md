@@ -24,7 +24,7 @@ This GitHub Action provides a task to generate the minimum Python given 1 or mor
 steps:
   - name: Run Minimum Dependency Generator
     id: min_dep_gen
-    uses: alteryx/minimum-dependency-generator@v3
+    uses: alteryx/minimum-dependency-generator@v3.1
     with:
       paths: 'test-requirements.txt requirements.txt'
   - name: Save the output minimum requirements
@@ -37,7 +37,7 @@ steps:
 steps:
   - name: Run Minimum Dependency Generator
     id: min_dep_gen
-    uses: alteryx/minimum-dependency-generator@v3
+    uses: alteryx/minimum-dependency-generator@v3.1
     with:
       paths: 'setup.cfg'
       options: 'install_requires setup_requires'
@@ -84,7 +84,7 @@ jobs:
           python-version: 3.8
       - name: Run Minimum Dependency Generator
         id: min_dep_gen
-        uses: alteryx/minimum-dependency-generator@v3
+        uses: alteryx/minimum-dependency-generator@v3.1
         with:
           paths: 'test-requirements.txt requirements.txt'
       - name: Update minimum core dependencies
