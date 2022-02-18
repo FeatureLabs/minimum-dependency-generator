@@ -1,13 +1,7 @@
-import sys
 import tempfile
 
-import pytest
-from packaging.specifiers import Specifier
+from ..minimum_dependency_generator import generate_min_requirements
 
-from ..minimum_dependency_generator import (
-    generate_min_requirements,
-    parse_setup_cfg
-)
 
 def test_with_setup_cfg(
     dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_upper, setuptools, p_ytest_dep
@@ -32,7 +26,6 @@ def test_with_setup_cfg(
     test =
         {p_ytest_dep}
     '''
-    start_of_file = ['[metadata]', 'name = example_package', " ", '[options]', 'install_requires =']
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".cfg", prefix="setup"
     ) as setup_cfg_f:

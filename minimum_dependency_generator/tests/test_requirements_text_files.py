@@ -1,14 +1,6 @@
-import sys
 import tempfile
 
-import pytest
-from packaging.specifiers import Specifier
-
-from ..minimum_dependency_generator import (
-    find_min_requirement,
-    generate_min_requirements,
-    parse_setup_cfg
-)
+from ..minimum_dependency_generator import generate_min_requirements
 
 
 def test_with_requirements_texts(
@@ -52,4 +44,3 @@ def test_with_requirements_texts(
     assert len(min_requirements) == len(expected_min_reqs)
     for idx, min_req in enumerate(min_requirements):
         assert expected_min_reqs[idx] == min_req.strip()
-

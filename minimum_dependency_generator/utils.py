@@ -1,7 +1,3 @@
-import configparser
-import os
-from collections import defaultdict
-
 from packaging.requirements import Requirement
 from packaging.specifiers import Specifier
 

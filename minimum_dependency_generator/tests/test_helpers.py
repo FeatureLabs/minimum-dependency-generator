@@ -1,14 +1,9 @@
 import sys
-import tempfile
 
 import pytest
 from packaging.specifiers import Specifier
 
-from ..minimum_dependency_generator import (
-    find_min_requirement,
-    generate_min_requirements,
-    parse_setup_cfg
-)
+from ..minimum_dependency_generator import find_min_requirement
 
 
 def test_lower_bound(ploty_dep):
@@ -98,4 +93,3 @@ def verify_mininum(
         extra_chars = ["[", "]"]
         not any([x in mininum_package.name for x in extra_chars])
         assert not any([x in required_package_name for x in extra_chars])
-

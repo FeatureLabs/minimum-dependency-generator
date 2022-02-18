@@ -3,7 +3,6 @@ import os
 from collections import defaultdict
 
 from packaging.requirements import Requirement
-from packaging.specifiers import Specifier
 
 from .utils import (
     clean_cfg_section,
@@ -74,14 +73,12 @@ def parse_setup_cfg(paths, options, extras_require):
 
 
 def generate_min_requirements(paths, options=None, extras_require=None):
-    is_requirements_text = False
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
     if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
         requirements = parse_setup_cfg(paths, options, extras_require)
     else:
-        is_requirements_text = True
         requirements = parse_requirements_text_file(paths)
 
     for req in requirements:
