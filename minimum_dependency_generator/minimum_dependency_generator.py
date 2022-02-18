@@ -56,12 +56,6 @@ def clean_cfg_section(section):
     return section
 
 
-def verify_list(item):
-    if not isinstance(item, list):
-        item = list(item)
-    return item
-
-
 def find_min_requirement(requirement, python_version="3.7", major_python_version="py3"):
     if is_requirement_path(requirement):
         # skip requirement paths
@@ -108,11 +102,11 @@ def parse_setup_cfg(paths, options, extras_require):
 
     requirements = []
     if options:
-        options = verify_list(options)
+        options = options.split(' ')
         for option in options:
             requirements += clean_cfg_section(config['options'][option])
     if extras_require:
-        options = verify_list(options)
+        extras_require = extras_require.split(' ')
         for extra in extras_require:
             requirements += clean_cfg_section(config['options.extras_require'][extra])
     return requirements
