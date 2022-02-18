@@ -19,7 +19,9 @@ runs:
   args:
     - --paths
     - ${{ inputs.paths }}
+    - --options
     - ${{ inputs.options }}
+    - --extras_require
     - ${{ inputs.extras_require }}
 branding:
   icon: 'align-center'  
