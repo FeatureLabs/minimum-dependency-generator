@@ -4,9 +4,10 @@ from ..minimum_dependency_generator import write_file
 
 
 def test_write_text_file():
-    data = 'scipy==0.8.0\npandas==1.2.0\n'
+    reqs = ['scipy==0.8.0', 'pandas==1.2.0']
+    reqs = '\n'.join(reqs) + '\n'
     with NamedTemporaryFile() as temp:
-        write_file(data, temp.name)
+        write_file(reqs, temp.name)
         with open(temp.name) as written:
             min_reqs = written.readlines()
             assert len(min_reqs) == 2
