@@ -27,8 +27,7 @@ steps:
     uses: alteryx/minimum-dependency-generator@v3.1
     with:
       paths: 'test-requirements.txt requirements.txt'
-  - name: Save the output minimum requirements
-    run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
+      output_filepath: 'generated-min-reqs.txt'
 ```
 
 #### setup.cfg
@@ -42,12 +41,13 @@ steps:
       paths: 'setup.cfg'
       options: 'install_requires setup_requires'
       extras_require: 'dev test'
-  - name: Save the output minimum requirements
-    run: printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> generated-min-reqs.txt
+      output_filepath: 'generated-min-reqs.txt'
 ```
 - The **options** can either be `install_requires`, or `setup_requires`, or both. 
 - The **extras_require** is optional, and depends on if you package has plugin-like dependencies. 
 - However, either **options** or **extra_requires** must be defined (or both). 
+- The **output_filepath** is optional, and specifies the absolute filepath where the minimum requirements should be outputted.
+
 
 The returned value of a task is available in later steps from the output `min_reqs`.
 
@@ -87,9 +87,7 @@ jobs:
         uses: alteryx/minimum-dependency-generator@v3.1
         with:
           paths: 'test-requirements.txt requirements.txt'
-      - name: Update minimum core dependencies
-        run: |
-          printf "${{ steps.min_dep_gen.outputs.min_reqs }}" >> my_package/deps/minimum_requirements.txt
+          output_filepath: 'my_package/deps/minimum_requirements.txt'
       - name: Create Pull Request
         uses: FeatureLabs/create-pull-request@v3
         with:

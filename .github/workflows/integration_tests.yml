@@ -99,6 +99,7 @@ jobs:
           paths: 'setup_example.cfg'
           options: 'install_requires setup_requires'
           extras_require: 'dev test'
+          output_filepath: 'output_filepath.txt'
       - name: Save the output minimum install_requires, setup_requires and dev, test requirements
         run: printf "${{ steps.min_dep_gen_6.outputs.min_reqs }}" >> generated-min-setupcfg-multiple-reqs.txt
       - name: Verify output
@@ -112,3 +113,11 @@ jobs:
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "autopep8==1.6.0"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pip==22.0.2"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "output_filepath.txt"
+      - name: File exists
+        if: steps.check_files.outputs.files_exists == 'false'
+        run: exit 1
