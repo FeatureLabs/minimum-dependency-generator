@@ -10,6 +10,9 @@ inputs:
   extras_require:
     description: 'section of setup.cfg (in [options.extras_require])'
     required: false
+  output_filepath:
+    description: 'filepath to output minimum requirements as text file'
+    required: false
 outputs:
   min_reqs: # id of output
     description: 'String that contains the minimized requirements (separated by \n)'
@@ -23,6 +26,8 @@ runs:
     - ${{ inputs.options }}
     - --extras_require
     - ${{ inputs.extras_require }}
+    - --output_filepath
+    - ${{ inputs.output_filepath }}
 branding:
   icon: 'align-center'  
   color: 'green'

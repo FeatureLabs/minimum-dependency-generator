@@ -99,6 +99,7 @@ jobs:
           paths: 'setup_example.cfg'
           options: 'install_requires setup_requires'
           extras_require: 'dev test'
+          output_filepath: 'output_filepath.txt'
       - name: Save the output minimum install_requires, setup_requires and dev, test requirements
         run: printf "${{ steps.min_dep_gen_6.outputs.min_reqs }}" >> generated-min-setupcfg-multiple-reqs.txt
       - name: Verify output
