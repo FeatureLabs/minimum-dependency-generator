@@ -119,7 +119,7 @@ def parse_setup_cfg(paths, options, extras_require):
     return requirements
 
 
-def generate_min_requirements(paths, options=None, extras_require=None):
+def generate_min_requirements(paths, options=None, extras_require=None, output_filepath=None):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
@@ -146,4 +146,14 @@ def generate_min_requirements(paths, options=None, extras_require=None):
         min_package = find_min_requirement(req)
         min_requirements.append(str(min_package))
     min_requirements = '\n'.join(min_requirements) + '\n'
+    if output_filepath:
+        write_file(min_requirements, output_filepath)
     return min_requirements
+
+def write_file(data, filepath):
+    try:
+        with open(filepath, 'w') as f:
+            f.write(data)
+    except OSError:
+        print("Error writing file")
+        exit(1)

@@ -19,20 +19,10 @@ def main():
                         help='path to output minimum dependencies (optional)')
 
     args = parser.parse_args()
-    requirements = generate_min_requirements(args.paths, args.options, args.extras_require)
+    requirements = generate_min_requirements(args.paths, args.options, args.extras_require, args.output_filepath)
     requirements = sanitize_string(requirements)
     # DO NOT remove, the GH action needs to output
     print("::set-output name=min_reqs::{}".format(requirements))
-    if args.output_filepath:
-        write_text_file(requirements, args.output_filepath)
-
-
-def write_text_file(data, filepath):
-    try:
-        with open(filepath, 'w') as f:
-            f.write(data)
-    except OSError:
-        exit(1)
 
 
 def sanitize_string(s):
