@@ -1,4 +1,5 @@
-from argparse import ArgumentParser, FileType
+import os
+from argparse import ArgumentParser
 
 from minimum_dependency_generator import generate_min_requirements
 
@@ -25,8 +26,11 @@ def main():
     print("::set-output name=min_reqs::{}".format(requirements))
 
     if args.output_filepath and os.path.endswith(".txt"):
-        with open(filename, 'w') as f:  # OSError if file exists or is invalid
-            f.write(requirements)
+        try:
+            with open(args.output_filepath, 'w') as f:
+                f.write(requirements)
+        except OSError:
+            exit(1)
 
 
 def sanitize_string(s):
