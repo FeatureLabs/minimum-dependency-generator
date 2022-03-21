@@ -1,5 +1,7 @@
-from ..minimum_dependency_generator import write_file
 from tempfile import NamedTemporaryFile
+
+from ..minimum_dependency_generator import write_file
+
 
 def test_write_text_file():
     data = 'scipy==0.8.0\npandas==1.2.0\n'
@@ -10,4 +12,3 @@ def test_write_text_file():
             assert len(min_reqs) == 2
             assert 'scipy==0.8.0' == min_reqs[0].strip()
             assert 'pandas==1.2.0' == min_reqs[1].strip()
-

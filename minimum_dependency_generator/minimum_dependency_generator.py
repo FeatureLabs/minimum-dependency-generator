@@ -150,6 +150,7 @@ def generate_min_requirements(paths, options=None, extras_require=None, output_f
         write_file(min_requirements, output_filepath)
     return min_requirements
 
+
 def write_file(data, filepath):
     try:
         with open(filepath, 'w') as f:
