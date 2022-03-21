@@ -1,4 +1,3 @@
-import os
 from argparse import ArgumentParser
 
 from minimum_dependency_generator import generate_min_requirements
@@ -24,13 +23,16 @@ def main():
     requirements = sanitize_string(requirements)
     # DO NOT remove, the GH action needs to output
     print("::set-output name=min_reqs::{}".format(requirements))
+    if args.output_filepath:
+        write_text_file(requirements, args.output_filepath)
 
-    if args.output_filepath and os.path.endswith(".txt"):
-        try:
-            with open(args.output_filepath, 'w') as f:
-                f.write(requirements)
-        except OSError:
-            exit(1)
+
+def write_text_file(data, filepath):
+    try:
+        with open(filepath, 'w') as f:
+            f.write(data)
+    except OSError:
+        exit(1)
 
 
 def sanitize_string(s):
