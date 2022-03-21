@@ -25,9 +25,8 @@ def main():
     print("::set-output name=min_reqs::{}".format(requirements))
 
     if args.output_filepath and os.path.endswith(".txt"):
-        with open(filename, 'w') as f: # OSError if file exists or is invalid
+        with open(filename, 'w') as f:  # OSError if file exists or is invalid
             f.write(requirements)
-
 
 
 def sanitize_string(s):
