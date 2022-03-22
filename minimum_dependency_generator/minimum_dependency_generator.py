@@ -124,7 +124,9 @@ def generate_min_requirements(paths, options=None, extras_require=None, output_f
     min_requirements = []
 
     if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
-        requirements = parse_setup_cfg(paths, options, extras_require)
+        requirements = parse_setup_cfg(paths, options, extras_require)	
+    elif len(paths) == 1 and paths[0].endswith('.toml') and os.path.basename(paths[0]).startswith('pyproject'):
+        requirements = parse_pyproject_toml(paths, options)	
     else:
         requirements = parse_requirements_text_file(paths)
 
