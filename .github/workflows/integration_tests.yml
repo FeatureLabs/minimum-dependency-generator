@@ -121,3 +121,5 @@ jobs:
       - name: File exists
         if: steps.check_files.outputs.files_exists == 'false'
         run: exit 1
+      - name: Print text file
+        run: cat output_filepath.txt
