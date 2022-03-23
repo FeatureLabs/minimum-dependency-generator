@@ -113,12 +113,12 @@ jobs:
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pip==22.0.2"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
       - name: Check file existence
-        id: check_files
+        id: check_files_1
         uses: andstor/file-existence-action@v1
         with:
           files: "output_filepath.txt"
       - name: File exists
-        if: steps.check_files.outputs.files_exists == 'false'
+        if: steps.check_files_1.outputs.files_exists == 'false'
         run: exit 1
       - name: Print text file
         run: cat output_filepath.txt
@@ -143,9 +143,12 @@ jobs:
           echo "${{ steps.min_dep_gen_7.outputs.min_reqs }}" | grep -c "pip==22.0.2"
           echo "${{ steps.min_dep_gen_7.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
       - name: Check file existence
-        id: check_files
+        id: check_files_2
         uses: andstor/file-existence-action@v1
         with:
           files: "output_filepath_toml.txt"
       - name: Print text file
         run: cat output_filepath_toml.txt
+      - name: File exists
+        if: steps.check_files_2.outputs.files_exists == 'false'
+        run: exit 1
