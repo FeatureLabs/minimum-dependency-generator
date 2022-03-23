@@ -12,10 +12,9 @@ def test_with_pyproject_toml(
     name = "example_package"
     requires-python = ">=3.7,<3.10"
     dependencies = [
-        "{dask_dep}",
         "{pandas_dep}",
         "{woodwork_dep}",
-        "{numpy_lower}",
+        "{numpy_upper}",
     ]
 
     [project.optional-dependencies]
@@ -24,7 +23,8 @@ def test_with_pyproject_toml(
         "{p_ytest_dep}",
     ]
     dev = [
-        "{numpy_upper}",
+        "{dask_dep}",
+        "{numpy_lower}",
     ]
     '''
     with tempfile.NamedTemporaryFile(
@@ -35,6 +35,6 @@ def test_with_pyproject_toml(
 
         paths = [pyproject_file.name]
         options = ['dependencies']
-        extra_requires = ['test']
+        extra_requires = ['test dev']
         min_requirements = generate_min_requirements(paths, options, extra_requires)
     verify_min_reqs_cfg_toml(min_requirements)

@@ -51,7 +51,7 @@ def determine_package_name(package):
     return name
 
 
-def clean_cfg_section(section):
+def clean_section(section):
     section = section.split('\n')
     section = [x for x in section if len(x) > 1]
     return section
@@ -113,10 +113,10 @@ def parse_setup_cfg(paths, options, extras_require):
     extras_require = clean_list_length_one(extras_require)
     if options and len(options) > 0:
         for option in options:
-            requirements += clean_cfg_section(config['options'][option])
+            requirements += clean_section(config['options'][option])
     if extras_require and len(extras_require) > 0:
         for extra in extras_require:
-            requirements += clean_cfg_section(config['options.extras_require'][extra])
+            requirements += clean_section(config['options.extras_require'][extra])
     return requirements
 
 
@@ -124,6 +124,9 @@ def parse_pyproject_toml(paths, options, extras_require):
     requirements = []
     with open(paths[0], "rb") as f:
         toml_dict = tomli.load(f)
+
+    options = clean_list_length_one(options)
+    extras_require = clean_list_length_one(extras_require)
     if options and len(options) > 0:
         for option in options:
             requirements += toml_dict['project'][option]
