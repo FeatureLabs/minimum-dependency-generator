@@ -4,9 +4,10 @@ import pytest
 
 from ..minimum_dependency_generator import generate_min_requirements
 
+
 @pytest.mark.parametrize(
     "file_prefix,file_extension,options",
-    [('setup', 'cfg', 'install_requires' ), ('pyproject', 'toml', 'dependencies')],
+    [('setup', 'cfg', 'install_requires'), ('pyproject', 'toml', 'dependencies')],
 )
 def test_with_toml_cfg(
     file_prefix, file_extension, options, cfg_str, toml_cfg
@@ -25,6 +26,7 @@ def test_with_toml_cfg(
         extra_requires = ['test dev']
         min_requirements = generate_min_requirements(paths, options, extra_requires)
     verify_min_reqs_cfg_toml(min_requirements)
+
 
 def verify_min_reqs_cfg_toml(min_requirements):
     assert '-r' not in min_requirements

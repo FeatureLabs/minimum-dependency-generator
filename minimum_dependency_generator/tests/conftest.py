@@ -68,6 +68,7 @@ def cfg_str(dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_up
     '''
     return setup_cfg_str
 
+
 @pytest.fixture(scope="session", autouse=True)
 def toml_cfg(pandas_dep, woodwork_dep, numpy_upper, ploty_dep, p_ytest_dep, dask_dep, numpy_lower):
     pyproject_str = f'''\
@@ -91,4 +92,3 @@ def toml_cfg(pandas_dep, woodwork_dep, numpy_upper, ploty_dep, p_ytest_dep, dask
     ]
     '''
     return pyproject_str
-
