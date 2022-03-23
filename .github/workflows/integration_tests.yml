@@ -110,7 +110,7 @@ jobs:
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "woodwork==0.8.1"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "wheel==0.37.1"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "autopep8==1.6.0"
-          echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pip==22.0.2"
+          echo "${{ steps.min_dep_gen_7.outputs.min_reqs }}" | grep -c "pip==22.0.2"
           echo "${{ steps.min_dep_gen_6.outputs.min_reqs }}" | grep -c "pytest==5.2.0"
       - name: Check file existence
         id: check_files_1
@@ -128,7 +128,7 @@ jobs:
         with:
           paths: 'pyproject_example.toml'
           options: 'dependencies'
-          extras_require: 'test'
+          extras_require: 'dev test'
           output_filepath: 'output_filepath_toml.txt'
       - name: Save the output minimum install_requires and dev, test requirements
         run: printf "${{ steps.min_dep_gen_7.outputs.min_reqs }}" >> generated-min-pyproject-multiple-reqs.txt
