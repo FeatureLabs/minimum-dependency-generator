@@ -16,8 +16,6 @@ def test_with_setup_cfg(
         {pandas_dep}
         {woodwork_dep}
         {numpy_lower}
-    setup_requires =
-        {setuptools}
 
     [options.extras_require] =
     koalas =
@@ -33,9 +31,13 @@ def test_with_setup_cfg(
         setup_cfg_f.flush()
 
         paths = [setup_cfg_f.name]
-        options = ['install_requires setup_requires']
+        options = ['install_requires']
         extra_requires = ['koalas test']
         min_requirements = generate_min_requirements(paths, options, extra_requires)
+    verify_min_reqs_cfg_toml(min_requirements)
+
+
+def verify_min_reqs_cfg_toml(min_requirements):
     assert '-r' not in min_requirements
     assert '.txt' not in min_requirements
     assert 'core-requirements.txt' not in min_requirements
@@ -48,7 +50,6 @@ def test_with_setup_cfg(
         "pandas==0.24.1",
         "plotly==4.14.0",
         "pytest==5.2.0",
-        "setuptools==47",
         "woodwork==0.0.11",
     ]
     expected_min_reqs = sorted(expected_min_reqs)

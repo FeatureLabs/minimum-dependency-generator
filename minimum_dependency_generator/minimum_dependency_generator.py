@@ -2,6 +2,7 @@ import configparser
 import os
 from collections import defaultdict
 
+import tomli
 from packaging.requirements import Requirement
 from packaging.specifiers import Specifier
 
@@ -119,14 +120,27 @@ def parse_setup_cfg(paths, options, extras_require):
     return requirements
 
 
+def parse_pyproject_toml(paths, options, extras_require):
+    requirements = []
+    with open(paths[0], "rb") as f:
+        toml_dict = tomli.load(f)
+    if options and len(options) > 0:
+        for option in options:
+            requirements += toml_dict['project'][option]
+    if extras_require and len(extras_require) > 0:
+        for extra in extras_require:
+            requirements += toml_dict['project']['optional-dependencies'][extra]
+    return requirements
+
+
 def generate_min_requirements(paths, options=None, extras_require=None, output_filepath=None):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
     if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
-        requirements = parse_setup_cfg(paths, options, extras_require)	
+        requirements = parse_setup_cfg(paths, options, extras_require)
     elif len(paths) == 1 and paths[0].endswith('.toml') and os.path.basename(paths[0]).startswith('pyproject'):
-        requirements = parse_pyproject_toml(paths, options)	
+        requirements = parse_pyproject_toml(paths, options, extras_require)
     else:
         requirements = parse_requirements_text_file(paths)
 
