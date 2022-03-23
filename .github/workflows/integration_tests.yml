@@ -126,7 +126,7 @@ jobs:
         id: min_dep_gen_7
         uses: ./
         with:
-          paths: 'pyproject.toml'
+          paths: 'pyproject_example.toml'
           options: 'dependencies'
           extras_require: 'test'
           output_filepath: 'output_filepath_toml.txt'
