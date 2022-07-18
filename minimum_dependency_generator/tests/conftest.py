@@ -44,3 +44,13 @@ def setuptools():
 @pytest.fixture(scope="session", autouse=True)
 def p_ytest_dep():
     return "pytest >= 5.2.0"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def scipy_lower():
+    return "scipy >= 1.3.3"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def scipy_even_higher():
+    return "scipy >= 1.5.0"

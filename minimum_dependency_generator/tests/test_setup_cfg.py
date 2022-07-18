@@ -4,9 +4,16 @@ from ..minimum_dependency_generator import generate_min_requirements
 
 
 def test_with_setup_cfg(
-    dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_upper, setuptools, p_ytest_dep
+    dask_dep,
+    pandas_dep,
+    woodwork_dep,
+    numpy_lower,
+    ploty_dep,
+    numpy_upper,
+    setuptools,
+    p_ytest_dep,
 ):
-    setup_cfg_str = f'''\
+    setup_cfg_str = f"""\
     [metadata]
     name = example_package
 
@@ -25,7 +32,7 @@ def test_with_setup_cfg(
         {numpy_upper}
     test =
         {p_ytest_dep}
-    '''
+    """
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".cfg", prefix="setup"
     ) as setup_cfg_f:
@@ -33,14 +40,14 @@ def test_with_setup_cfg(
         setup_cfg_f.flush()
 
         paths = [setup_cfg_f.name]
-        options = ['install_requires setup_requires']
-        extra_requires = ['koalas test']
+        options = ["install_requires setup_requires"]
+        extra_requires = ["koalas test"]
         min_requirements = generate_min_requirements(paths, options, extra_requires)
-    assert '-r' not in min_requirements
-    assert '.txt' not in min_requirements
-    assert 'core-requirements.txt' not in min_requirements
-    min_requirements = min_requirements.split('\n')
-    assert min_requirements[-1] == ''
+    assert "-r" not in min_requirements
+    assert ".txt" not in min_requirements
+    assert "core-requirements.txt" not in min_requirements
+    min_requirements = min_requirements.split("\n")
+    assert min_requirements[-1] == ""
     min_requirements = min_requirements[:-1]
     expected_min_reqs = [
         "dask[dataframe]==2.30.0",
