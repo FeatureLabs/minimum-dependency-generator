@@ -39,7 +39,7 @@ steps:
     uses: alteryx/minimum-dependency-generator@v3.1
     with:
       paths: 'setup.cfg'
-      options: 'install_requires setup_requires'
+      options: 'install_requires'
       extras_require: 'dev test'
       output_filepath: 'generated-min-reqs.txt'
 ```

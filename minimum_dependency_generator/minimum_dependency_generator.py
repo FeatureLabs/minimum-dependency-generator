@@ -2,6 +2,7 @@ import configparser
 import os
 from collections import defaultdict
 
+import tomli
 from packaging.requirements import Requirement
 from packaging.specifiers import Specifier
 
@@ -35,12 +36,13 @@ def is_requirement_path(requirement):
 
 
 def find_operator_version(package, operator):
-    version = None
+    matching_versions = []
     for x in package.specifier:
         if x.operator == operator:
-            version = x.version
-            break
-    return version
+            matching_versions.append(Specifier(operator + x.version))
+    # matching_versions is sorted lowest to highest
+    matching_versions = sorted(matching_versions, key=str)
+    return matching_versions[-1].version
 
 
 def determine_package_name(package):
@@ -66,6 +68,7 @@ def find_min_requirement(requirement):
         return
     if ">=" in requirement:
         # mininum version specified (ex - 'package >= 0.0.4')
+        number_operators = requirement.count(">=")
         package = Requirement(requirement)
         version = find_operator_version(package, ">=")
         mininum = create_strict_min(version)
@@ -119,6 +122,22 @@ def parse_setup_cfg(paths, options, extras_require):
     return requirements
 
 
+def parse_pyproject_toml(paths, options, extras_require):
+    requirements = []
+    with open(paths[0], "rb") as f:
+        toml_dict = tomli.load(f)
+
+    options = clean_list_length_one(options)
+    extras_require = clean_list_length_one(extras_require)
+    if options and len(options) > 0:
+        for option in options:
+            requirements += toml_dict["project"][option]
+    if extras_require and len(extras_require) > 0:
+        for extra in extras_require:
+            requirements += toml_dict["project"]["optional-dependencies"][extra]
+    return requirements
+
+
 def generate_min_requirements(
     paths, options=None, extras_require=None, output_filepath=None
 ):
@@ -131,6 +150,12 @@ def generate_min_requirements(
         and os.path.basename(paths[0]).startswith("setup")
     ):
         requirements = parse_setup_cfg(paths, options, extras_require)
+    elif (
+        len(paths) == 1
+        and paths[0].endswith(".toml")
+        and os.path.basename(paths[0]).startswith("pyproject")
+    ):
+        requirements = parse_pyproject_toml(paths, options, extras_require)
     else:
         requirements = parse_requirements_text_file(paths)
 
