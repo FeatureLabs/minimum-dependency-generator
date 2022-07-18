@@ -30,18 +30,19 @@ def remove_comment(requirement):
 
 
 def is_requirement_path(requirement):
-    if '.txt' in requirement and '-r' in requirement:
+    if ".txt" in requirement and "-r" in requirement:
         return True
     return False
 
 
 def find_operator_version(package, operator):
-    version = None
+    matching_versions = []
     for x in package.specifier:
         if x.operator == operator:
-            version = x.version
-            break
-    return version
+            matching_versions.append(Specifier(operator + x.version))
+    # matching_versions is sorted lowest to highest
+    matching_versions = sorted(matching_versions, key=str)
+    return matching_versions[-1].version
 
 
 def determine_package_name(package):
@@ -51,13 +52,13 @@ def determine_package_name(package):
     return name
 
 
-def clean_section(section):
-    section = section.split('\n')
+def clean_cfg_section(section):
+    section = section.split("\n")
     section = [x for x in section if len(x) > 1]
     return section
 
 
-def find_min_requirement(requirement, python_version="3.7", major_python_version="py3"):
+def find_min_requirement(requirement):
     if is_requirement_path(requirement):
         # skip requirement paths
         # ex '-r core_requirements.txt'
@@ -67,6 +68,7 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
         return
     if ">=" in requirement:
         # mininum version specified (ex - 'package >= 0.0.4')
+        number_operators = requirement.count(">=")
         package = Requirement(requirement)
         version = find_operator_version(package, ">=")
         mininum = create_strict_min(version)
@@ -87,9 +89,9 @@ def find_min_requirement(requirement, python_version="3.7", major_python_version
 
 
 def clean_list_length_one(item):
-    if isinstance(item, list) and len(item) == 1 and ' ' in item[0]:
-        item = item[0].split(' ')
-    if item == ['']:
+    if isinstance(item, list) and len(item) == 1 and " " in item[0]:
+        item = item[0].split(" ")
+    if item == [""]:
         return None
     return item
 
@@ -113,10 +115,10 @@ def parse_setup_cfg(paths, options, extras_require):
     extras_require = clean_list_length_one(extras_require)
     if options and len(options) > 0:
         for option in options:
-            requirements += clean_section(config['options'][option])
+            requirements += clean_cfg_section(config["options"][option])
     if extras_require and len(extras_require) > 0:
         for extra in extras_require:
-            requirements += clean_section(config['options.extras_require'][extra])
+            requirements += clean_cfg_section(config["options.extras_require"][extra])
     return requirements
 
 
@@ -129,20 +131,30 @@ def parse_pyproject_toml(paths, options, extras_require):
     extras_require = clean_list_length_one(extras_require)
     if options and len(options) > 0:
         for option in options:
-            requirements += toml_dict['project'][option]
+            requirements += toml_dict["project"][option]
     if extras_require and len(extras_require) > 0:
         for extra in extras_require:
-            requirements += toml_dict['project']['optional-dependencies'][extra]
+            requirements += toml_dict["project"]["optional-dependencies"][extra]
     return requirements
 
 
-def generate_min_requirements(paths, options=None, extras_require=None, output_filepath=None):
+def generate_min_requirements(
+    paths, options=None, extras_require=None, output_filepath=None
+):
     requirements_to_specifier = defaultdict(list)
     min_requirements = []
 
-    if len(paths) == 1 and paths[0].endswith('.cfg') and os.path.basename(paths[0]).startswith('setup'):
+    if (
+        len(paths) == 1
+        and paths[0].endswith(".cfg")
+        and os.path.basename(paths[0]).startswith("setup")
+    ):
         requirements = parse_setup_cfg(paths, options, extras_require)
-    elif len(paths) == 1 and paths[0].endswith('.toml') and os.path.basename(paths[0]).startswith('pyproject'):
+    elif (
+        len(paths) == 1
+        and paths[0].endswith(".toml")
+        and os.path.basename(paths[0]).startswith("pyproject")
+    ):
         requirements = parse_pyproject_toml(paths, options, extras_require)
     else:
         requirements = parse_requirements_text_file(paths)
@@ -164,7 +176,7 @@ def generate_min_requirements(paths, options=None, extras_require=None, output_f
     for req in list(sorted(requirements_to_specifier.values())):
         min_package = find_min_requirement(req)
         min_requirements.append(str(min_package))
-    min_requirements = '\n'.join(min_requirements) + '\n'
+    min_requirements = "\n".join(min_requirements) + "\n"
     if output_filepath:
         write_file(min_requirements, output_filepath)
     return min_requirements
@@ -172,7 +184,7 @@ def generate_min_requirements(paths, options=None, extras_require=None, output_f
 
 def write_file(data, filepath):
     try:
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             f.write(data)
     except OSError:
         print("Error writing file")

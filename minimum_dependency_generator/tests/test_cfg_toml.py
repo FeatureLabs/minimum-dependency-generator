@@ -7,13 +7,11 @@ from ..minimum_dependency_generator import generate_min_requirements
 
 @pytest.mark.parametrize(
     "file_prefix,file_extension,options",
-    [('setup', 'cfg', 'install_requires'), ('pyproject', 'toml', 'dependencies')],
+    [("setup", "cfg", "install_requires"), ("pyproject", "toml", "dependencies")],
 )
-def test_with_toml_cfg(
-    file_prefix, file_extension, options, cfg_str, toml_cfg
-):
+def test_with_toml_cfg(file_prefix, file_extension, options, cfg_str, toml_cfg):
     file_str = toml_cfg
-    if file_prefix == 'setup':
+    if file_prefix == "setup":
         file_str = cfg_str
     with tempfile.NamedTemporaryFile(
         mode="w", suffix="." + file_extension, prefix=file_prefix
@@ -23,17 +21,17 @@ def test_with_toml_cfg(
 
         paths = [pyproject_file.name]
         options = [options]
-        extra_requires = ['test dev']
+        extra_requires = ["test dev"]
         min_requirements = generate_min_requirements(paths, options, extra_requires)
     verify_min_reqs_cfg_toml(min_requirements)
 
 
 def verify_min_reqs_cfg_toml(min_requirements):
-    assert '-r' not in min_requirements
-    assert '.txt' not in min_requirements
-    assert 'core-requirements.txt' not in min_requirements
-    min_requirements = min_requirements.split('\n')
-    assert min_requirements[-1] == ''
+    assert "-r" not in min_requirements
+    assert ".txt" not in min_requirements
+    assert "core-requirements.txt" not in min_requirements
+    min_requirements = min_requirements.split("\n")
+    assert min_requirements[-1] == ""
     min_requirements = min_requirements[:-1]
     expected_min_reqs = [
         "dask[dataframe]==2.30.0",

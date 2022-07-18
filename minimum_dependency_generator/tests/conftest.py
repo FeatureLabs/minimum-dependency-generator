@@ -47,8 +47,20 @@ def p_ytest_dep():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def cfg_str(dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_upper, p_ytest_dep):
-    setup_cfg_str = f'''\
+def scipy_lower():
+    return "scipy >= 1.3.3"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def scipy_even_higher():
+    return "scipy >= 1.5.0"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cfg_str(
+    dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_upper, p_ytest_dep
+):
+    setup_cfg_str = f"""\
     [metadata]
     name = example_package
 
@@ -65,13 +77,15 @@ def cfg_str(dask_dep, pandas_dep, woodwork_dep, numpy_lower, ploty_dep, numpy_up
         {numpy_upper}
     test =
         {p_ytest_dep}
-    '''
+    """
     return setup_cfg_str
 
 
 @pytest.fixture(scope="session", autouse=True)
-def toml_cfg(pandas_dep, woodwork_dep, numpy_upper, ploty_dep, p_ytest_dep, dask_dep, numpy_lower):
-    pyproject_str = f'''\
+def toml_cfg(
+    pandas_dep, woodwork_dep, numpy_upper, ploty_dep, p_ytest_dep, dask_dep, numpy_lower
+):
+    pyproject_str = f"""\
     [project]
     name = "example_package"
     requires-python = ">=3.7,<3.10"
@@ -90,5 +104,5 @@ def toml_cfg(pandas_dep, woodwork_dep, numpy_upper, ploty_dep, p_ytest_dep, dask
         "{dask_dep}",
         "{numpy_lower}",
     ]
-    '''
+    """
     return pyproject_str

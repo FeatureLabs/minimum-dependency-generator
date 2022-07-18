@@ -7,12 +7,12 @@ clean:
 
 .PHONY: lint
 lint:
-	flake8 minimum_dependency_generator/
 	isort --check-only minimum_dependency_generator/
+	black minimum_dependency_generator -t py310 --check
 
 .PHONY: lint-fix
 lint-fix:
-	autopep8 --in-place --recursive --max-line-length=100 minimum_dependency_generator/
+	black minimum_dependency_generator -t py310
 	isort minimum_dependency_generator/
 
 .PHONY: test
@@ -22,3 +22,8 @@ test:
 .PHONY: testcoverage
 testcoverage:
 	pytest minimum_dependency_generator/ --cov=minimum_dependency_generator  --cov-config=.coveragerc --cache-clear --show-capture=stderr
+
+.PHONY: installdeps
+installdeps:
+	pip install -r requirements.txt
+	pip install -r test-requirements.txt

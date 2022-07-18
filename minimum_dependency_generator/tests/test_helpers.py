@@ -20,6 +20,13 @@ def test_lower_upper_bound(dask_dep):
     verify_mininum(mininum_package, "dask", "2.30.0", required_extra="dataframe")
 
 
+def test_two_lower_bounds():
+    mininum_package = find_min_requirement("scipy>=1.3.3,>=1.5.0")
+    verify_mininum(mininum_package, "scipy", "1.5.0")
+    mininum_package = find_min_requirement("scipy>=1.5.0,>=1.3.3")
+    verify_mininum(mininum_package, "scipy", "1.5.0")
+
+
 def test_spacing():
     mininum_package = find_min_requirement("statsmodels >= 0.12.2")
     verify_mininum(mininum_package, "statsmodels", "0.12.2")
